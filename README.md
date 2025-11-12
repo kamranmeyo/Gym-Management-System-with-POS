@@ -6,23 +6,23 @@ A complete **Gym Management System** built with **Laravel**, designed to manage 
 
 ---
 
-| Screen                      | Preview                                                               | Description                                                                       |
-| :-------------------------- | :-------------------------------------------------------------------- | :-------------------------------------------------------------------------------- |
-| **Welcome Page**            | ![welcome](public/screenshots/welcome.png)                            | Landing page of the system before login.                                          |
-| **Admin Dashboard**         | ![Admin\_Dasboard](screenshots/Admin_Dasboard.png)                    | Overview of total members, trainers, and revenue.                                 |
-| **Add Member**              | ![Add\_Member](screenshots/Add_Member.png)                            | Form to register a new gym member.                                                |
-| **Member List**             | ![Member\_List](screenshots/Member_List.png)                          | View, edit, or delete registered gym members.                                     |
-| **Fee Plan**                | ![Fee\_Plan](screenshots/Fee_Plan.png)                                | Create and manage gym membership fee plans.                                       |
-| **Fee Plan List**           | ![Fee\_Plan\_List](screenshots/Fee_Plan_List.png)                     | Shows all available membership fee plans.                                         |
-| **Fee Date-Wise Report**    | ![Fee\_Date\_Wise\_Report](screenshots/Fee_Date_Wise_Report.png)      | Report for collected fees by date.                                                |
-| **Collect Fee**             | ![Collect\_Fee](screenshots/Collect_Fee.png)                          | Record and manage fee payments from members.                                      |
-| **Mark Attendance**         | ![Mark\_Attendance](screenshots/Mark_Attendance.png)                  | Attendance screen for daily check-ins.                                            |
-| **Mark Attendance 2**       | ![Mark\_Attendance2](screenshots/Mark_Attendance2.png)                | Alternate attendance layout or confirmation view.                                 |
-| **Mark Attendance Success** | ![Mark\_Attendance\_Success](screenshots/Mark_Attendance_Success.png) | Confirmation of successful attendance marking.                                    |
-| **Product List**            | ![Product\_List](screenshots/Product_List.png)                        | All available products for sale in POS.                                           |
-| **POS Sale Screen**         | ![POS\_Sale\_Screen](screenshots/POS_Sale_Screen.png)                 | Point-of-sale screen to select products, set quantity, and auto-calculate totals. |
-| **Sales List**              | ![Sales\_List](screenshots/Sales_List.png)                            | View all completed sales transactions.                                            |
-| **Sale Print**              | ![Sale\_Print](screenshots/Sale_Print.png)                            | Auto-generated printable receipt after a sale.                                    |
+| Screen                      | Preview                                                                      | Description                                                                       |
+| :-------------------------- | :--------------------------------------------------------------------------- | :-------------------------------------------------------------------------------- |
+| **Welcome Page**            | ![welcome](public/screenshots/welcome.png)                                   | Landing page of the system before login.                                          |
+| **Admin Dashboard**         | ![Admin\_Dasboard](public/screenshots/Admin_Dasboard.png)                    | Overview of total members, trainers, and revenue.                                 |
+| **Add Member**              | ![Add\_Member](public/screenshots/Add_Member.png)                            | Form to register a new gym member.                                                |
+| **Member List**             | ![Member\_List](public/screenshots/Member_List.png)                          | View, edit, or delete registered gym members.                                     |
+| **Fee Plan**                | ![Fee\_Plan](public/screenshots/Fee_Plan.png)                                | Create and manage gym membership fee plans.                                       |
+| **Fee Plan List**           | ![Fee\_Plan\_List](public/screenshots/Fee_Plan_List.png)                     | Shows all available membership fee plans.                                         |
+| **Fee Date-Wise Report**    | ![Fee\_Date\_Wise\_Report](public/screenshots/Fee_Date_Wise_Report.png)      | Report for collected fees by date.                                                |
+| **Collect Fee**             | ![Collect\_Fee](public/screenshots/Collect_Fee.png)                          | Record and manage fee payments from members.                                      |
+| **Mark Attendance**         | ![Mark\_Attendance](public/screenshots/Mark_Attendance.png)                  | Attendance screen for daily check-ins.                                            |
+| **Mark Attendance 2**       | ![Mark\_Attendance2](public/screenshots/Mark_Attendance2.png)                | Alternate attendance layout or confirmation view.                                 |
+| **Mark Attendance Success** | ![Mark\_Attendance\_Success](public/screenshots/Mark_Attendance_Success.png) | Confirmation of successful attendance marking.                                    |
+| **Product List**            | ![Product\_List](public/screenshots/Product_List.png)                        | All available products for sale in POS.                                           |
+| **POS Sale Screen**         | ![POS\_Sale\_Screen](public/screenshots/POS_Sale_Screen.png)                 | Point-of-sale screen to select products, set quantity, and auto-calculate totals. |
+| **Sales List**              | ![Sales\_List](public/screenshots/Sales_List.png)                            | View all completed sales transactions.                                            |
+| **Sale Print**              | ![Sale\_Print](public/screenshots/Sale_Print.png)                            | Auto-generated printable receipt after a sale.                                    |
 
 
 
