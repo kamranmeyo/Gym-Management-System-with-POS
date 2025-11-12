@@ -1,5 +1,3 @@
-Got it ✅ — here’s a **professional, GitHub-ready `README.md`** draft for your **Laravel Gym Management System** project (with sections for screenshots, installation, features, etc.).
-
 ---
 
 # 🏋️‍♂️ Laravel Gym Management System
@@ -10,7 +8,7 @@ A complete **Gym Management System** built with **Laravel**, designed to manage 
 
 | Screen                      | Preview                                                               | Description                                                                       |
 | :-------------------------- | :-------------------------------------------------------------------- | :-------------------------------------------------------------------------------- |
-| **Welcome Page**            | ![welcome](screenshots/welcome.png)                                   | Landing page of the system before login.                                          |
+| **Welcome Page**            | ![welcome](public/screenshots/welcome.png)                            | Landing page of the system before login.                                          |
 | **Admin Dashboard**         | ![Admin\_Dasboard](screenshots/Admin_Dasboard.png)                    | Overview of total members, trainers, and revenue.                                 |
 | **Add Member**              | ![Add\_Member](screenshots/Add_Member.png)                            | Form to register a new gym member.                                                |
 | **Member List**             | ![Member\_List](screenshots/Member_List.png)                          | View, edit, or delete registered gym members.                                     |
