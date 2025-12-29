@@ -9,7 +9,10 @@
             @if(session('success'))
                 <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">{{ session('success') }}</div>
             @endif
-
+            @php
+                $user = auth()->user();
+                $isSuperAdmin = $user->hasRole('SuperAdmin');
+            @endphp
             <div class="overflow-x-auto">
                 <table id="salesTable" class="min-w-full border text-sm table-auto">
                     <thead class="bg-gray-200">
@@ -49,11 +52,12 @@
                                 {{-- Actions: Re-print & Delete --}}
                                 <td class="px-3 py-2 text-center space-x-2">
                                     <a href="{{ route('pos.sales.print', $sale->id) }}" target="_blank" class="text-blue-500">Re-print</a>
-
+                                     @if ($isSuperAdmin)
                                     <form action="{{ route('pos.sales.destroy', $sale->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-500">Delete</button>
+                                    @endif
                                 </form>
                                 </td>
                             </tr>

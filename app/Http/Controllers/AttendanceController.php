@@ -14,35 +14,13 @@ class AttendanceController extends Controller
         return view('attendance.index');
     }
 
-    // When QR code is scanned
-    public function scanold(Request $request) // with attandec mark and sound
-    {
-        $memberCode = $request->member_code;
 
-        $member = Member::where('member_code', $memberCode)->first();
-
-        if (!$member) {
-            return response()->json(['status' => 'error', 'message' => 'Member not found']);
-        }
-
-        $isExpired = Carbon::parse($member->expiry_date)->isPast();
-
-        return response()->json([
-            'status' => 'success',
-            'data' => [
-                'name' => $member->name,
-                'start' => $member->join_date,
-                'end' => $member->expiry_date,
-                'plan' => $member->membership_type,
-                'is_expired' => $isExpired,
-            ]
-        ]);
-    }
 
 public function scan(Request $request)
 {
     $member = Member::where('member_code', $request->member_code ?? null)
                     ->orWhere('phone', $request->phone ?? null)
+                    ->orWhere('id', $request->phone ?? null)
                     ->first();
 
     if (!$member) {
@@ -67,6 +45,36 @@ public function scan(Request $request)
             'is_expired' => $isExpired,
         ]
     ]);
+}
+
+
+public function list(Request $request)
+{
+    $query = Attendance::with('member');
+
+    // Date filters
+    if ($request->filled('date_from')) {
+        $query->whereDate('date', '>=', $request->date_from);
+    }
+    if ($request->filled('date_to')) {
+        $query->whereDate('date', '<=', $request->date_to);
+    }
+
+    // Role-based member gender filter
+    if (auth()->user()->hasRole('MaleUser')) {
+        $query->whereHas('member', function($q) {
+            $q->where('gender', 1); // 1 = Male
+        });
+    } elseif (auth()->user()->hasRole('FemaleUser')) {
+        $query->whereHas('member', function($q) {
+            $q->where('gender', 2); // 2 = Female
+        });
+    }
+    // SuperAdmin can see all, no filter needed
+
+    $attendance = $query->get();
+
+    return view('attendance.list', compact('attendance'));
 }
 
 

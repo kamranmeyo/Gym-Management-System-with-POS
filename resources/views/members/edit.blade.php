@@ -33,18 +33,23 @@
                     <!-- Plan Dropdown -->
                     <div>
                         <label class="block text-gray-600 text-sm">Plan</label>
-                        <select name="membership_type" id="plan" class="w-full border-gray-300 rounded-md" required>
-                            <option value="">-- Select Plan --</option>
-                            <option value="200" {{ $member->membership_type == '200' ? 'selected' : '' }}>Gym (Rs. 200)</option>
-                            <option value="2500" {{ $member->membership_type == '2500' ? 'selected' : '' }}>Cardio (Rs. 2500)</option>
-                            <option value="2700" {{ $member->membership_type == '2700' ? 'selected' : '' }}>Gym + Cardio (Rs. 2700)</option>
-                        </select>
+                       <select name="membership_type" id="plan" class="w-full border-gray-300 rounded-md" required>
+                        <option value="">-- Select Plan --</option>
+                        @foreach(\App\Models\Plan::all() as $plan)
+                            <option value="{{ $plan->name }}" 
+                                    data-price="{{ $plan->price }}" 
+                                    @if(old('membership_type', $member->membership_type) == $plan->name) selected @endif>
+                                {{ $plan->name }} (Rs. {{ $plan->price }})
+                            </option>
+                        @endforeach
+                    </select>
                     </div>
 
                     <!-- Fee -->
                     <div>
                         <label class="block text-gray-600 text-sm">Fee</label>
-                        <input type="number" name="fee" id="fee" step="0.01" value="{{ $member->fee }}" class="w-full border-gray-300 rounded-md">
+                        <input type="number" name="fee" id="fee" value="{{ old('fee', $member->fee) }}" class="mt-2 p-2 border rounded-md w-full" required readonly />
+                        {{-- <input type="number" name="fee" id="fee" step="0.01" value="{{ $member->fee }}" class="mt-2 p-2 border rounded-md w-full"> --}}
                     </div>
 
                     <!-- Fee Method -->
@@ -68,7 +73,7 @@
                     <!-- Expiry Date -->
                     <div>
                         <label class="block text-gray-600 text-sm">Expiry Date</label>
-                        <input type="date" name="expiry_date" id="expiry_date" value="{{ $member->expiry_date }}" class="w-full border-gray-300 rounded-md bg-gray-100" readonly>
+                        <input type="date" name="expiry_date" id="expiry_date" value="{{ $member->expiry_date }}" class="w-full border-gray-300 rounded-md">
                     </div>
 
                     <!-- Comment -->
@@ -90,10 +95,36 @@
     <!-- JS for Fee update when plan changes -->
     <script>
         const planSelect = document.getElementById('plan');
-        const feeInput = document.getElementById('fee');
+        // const feeInput = document.getElementById('fee');
 
-        planSelect.addEventListener('change', function() {
-            feeInput.value = this.value;
-        });
+        // planSelect.addEventListener('change', function() {
+        //     feeInput.value = this.value;
+        // });
+        document.addEventListener('DOMContentLoaded', function() {
+    // Get the plan dropdown and fee input elements
+    const planSelect = document.getElementById('plan');
+    const feeInput = document.getElementById('fee');
+
+    // Check if the plan is already selected and update fee
+    updateFeeFromSelectedPlan();
+
+    // Listen for change in plan selection
+    planSelect.addEventListener('change', function() {
+        // Update fee when the plan is changed
+        updateFeeFromSelectedPlan();
+    });
+
+    function updateFeeFromSelectedPlan() {
+        // Get the selected option
+        const selectedOption = planSelect.options[planSelect.selectedIndex];
+
+        // Get the price from the data-price attribute
+        const price = selectedOption.getAttribute('data-price');
+
+        // Set the fee input's value to the price
+        feeInput.value = price;
+    }
+});
+
     </script>
 </x-app-layout>

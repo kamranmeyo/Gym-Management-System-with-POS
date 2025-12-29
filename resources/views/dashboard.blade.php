@@ -47,6 +47,7 @@
 
             <!-- Total Visits (Today) -->
             <div class="bg-white p-5 rounded-lg shadow hover:shadow-lg transition transform hover:-translate-y-1 cursor-pointer">
+                <a href="{{ route('attendance.list') }}">
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-sm text-gray-500">Total Visits (Today)</h3>
@@ -56,6 +57,7 @@
                         <i class="fa-solid fa-calendar-check text-blue-600 text-xl"></i>
                     </div>
                 </div>
+                </a>
             </div>
 
             <!-- Reports -->

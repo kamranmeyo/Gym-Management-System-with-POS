@@ -1,19 +1,30 @@
 <x-app-layout>
     <div class="p-6 bg-gray-100 min-h-screen">
-        <div class="max-w-6xl mx-auto bg-white p-6 shadow rounded-lg">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-700">👥 Members List</h2>
+        <div class="bg-white p-6 shadow rounded-lg">
+
+        @if(auth()->user()->hasRole('SuperAdmin'))
+        <button onclick="syncMembers()"
+            class="mb-4 px-4 py-2 bg-purple-600 rounded">
+            🔄 Sync Members to Machine
+        </button>
+        @endif
+
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">👥 Members List From DB</h2>
             @php
                 $user = auth()->user();
                 $isSuperAdmin = $user->hasRole('SuperAdmin');
             @endphp
 
-            <table class="w-full border border-gray-200 text-sm">
+            <table id="dbMembersTable" class="w-full border border-gray-200 text-sm">
                 <thead class="bg-gray-200">
                     <tr>
                         <th class="px-4 py-2 text-left">#</th>
+                        <th class="px-4 py-2 text-left">DB Id</th>
                         <th class="px-4 py-2 text-left">Name</th>
                         <th class="px-4 py-2 text-left">Phone</th>
                         <th class="px-4 py-2 text-left">Gender</th>
+                        <th class="px-4 py-2 text-left">Fee</th>
+                        <th class="px-4 py-2 text-left">Package Type</th>
                         <th class="px-4 py-2 text-left">Join Date</th>
                         <th class="px-4 py-2 text-left">Last Fee</th>
                         <th class="px-4 py-2 text-left">Next Fee Due</th>
@@ -24,11 +35,14 @@
                     @foreach ($members as $member)
                         <tr class="border-t hover:bg-gray-50">
                             <td class="px-4 py-2">{{ $loop->iteration }}</td>
+                            <td class="px-4 py-2">{{ $member->id }}</td>
                             <td class="px-4 py-2 font-medium">{{ $member->name }}</td>
                             <td class="px-4 py-2">{{ $member->phone }}</td>
                             <td class="px-4 py-2">
                                 {{ $member->gender == 1 ? 'Male' : 'Female' }}
                             </td>
+                            <td class="px-4 py-2">{{ $member->fee }}</td>
+                            <td class="px-4 py-2">{{ $member->membership_type }}</td>
                             <td class="px-4 py-2">{{ $member->join_date }}</td>
 
                             <!-- Fee Info -->
@@ -62,12 +76,88 @@
                     @endforeach
                 </tbody>
             </table>
+            {{-- <div class="mt-4">
+   // {{ $members->links() }}
+</div> --}}
+        </div>
+        <br>
+        <div class="bg-white p-6 shadow rounded-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">👥 Members List From Machine</h2>
+            @php
+                $user = auth()->user();
+                $isSuperAdmin = $user->hasRole('SuperAdmin');
+            @endphp
+
+            <table id="machineMembersTable" class="w-full border border-gray-200 text-sm">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="px-4 py-2 text-left">#</th>
+                        <th class="px-4 py-2 text-left">Name</th>
+                        <th class="px-4 py-2 text-left">Person ID</th>
+                        <th class="px-4 py-2 text-left">Begin Time</th>
+                        <th class="px-4 py-2 text-left">End Time</th>
+                        <th class="px-4 py-2 text-left">Next Fee Due</th>
+                    </tr>
+                </thead>
+<tbody>
+    @forelse($users as $index => $person)
+        <tr class="border-t">
+            <td class="px-4 py-2">{{ $index + 1 }}</td>
+
+            <td class="px-4 py-2">
+                {{ $person['name'] ?? '-' }}
+            </td>
+
+            <td class="px-4 py-2">
+                {{ $person['employeeNo'] ?? '-' }}
+            </td>
+
+            <td class="px-4 py-2">
+                {{ \Carbon\Carbon::parse($person['Valid']['beginTime'] ?? null)->format('d-m-Y') ?? '-' }}
+            </td>
+
+            <td class="px-4 py-2">
+                {{ \Carbon\Carbon::parse($person['Valid']['endTime'] ?? null)->format('d-m-Y') ?? '-' }}
+            </td>
+
+            <td class="px-4 py-2">
+                {{-- example: calculate next fee --}}
+                {{ \Carbon\Carbon::parse($person['Valid']['endTime'] ?? null)
+                    ->addMonth()
+                    ->format('Y-m-d') ?? '-' }}
+            </td>
+
+
+        </tr>
+    @empty
+        <tr>
+            <td colspan="7" class="px-4 py-4 text-center text-gray-500">
+                No members found or machine is offline
+            </td>
+        </tr>
+    @endforelse
+</tbody>
+            </table>
         </div>
     </div>
 
+        
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <!-- SweetAlert2 (for nice popup) -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+<script>
+$(document).ready(function () {
+    $('#dbMembersTable').DataTable({
+        paging: true, // Laravel handles paging
+        searching: true,
+        ordering: true,
+        lengthMenu: [10, 25, 50],
+        info: true
+    });
+});
+</script>
     <script>
         function showQR(memberCode) {
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${memberCode}`;
@@ -85,4 +175,67 @@
             });
         }
     </script>
+    <script>
+$(document).ready(function () {
+    $('#machineMembersTable').DataTable({
+        paging: true,
+        pageLength: 10,
+        searching: true,
+        ordering: true,
+        lengthMenu: [10, 25, 50],
+        language: {
+            emptyTable: "No members found from machine"
+        }
+    });
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+function syncMembers() {
+
+    Swal.fire({
+        title: 'Syncing Members',
+        text: 'Please wait...',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    fetch("{{ url('/members/sync-machine') }}", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+            "Accept": "application/json",
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Sync Completed',
+            text: `${data.synced} members synced successfully`,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#2563EB'
+        }).then(() => {
+            location.reload();
+        });
+
+    })
+    .catch(error => {
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Sync Failed',
+            text: 'Machine offline or error occurred',
+            confirmButtonColor: '#DC2626'
+        });
+
+    });
+}
+</script>
+
 </x-app-layout>

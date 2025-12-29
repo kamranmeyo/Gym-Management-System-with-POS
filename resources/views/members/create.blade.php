@@ -34,7 +34,7 @@
                         <select name="membership_type" id="plan" class="w-full border-gray-300 rounded-md" required>
                             <option value="">-- Select Plan --</option>
                             @foreach(\App\Models\Plan::all() as $plan)
-                                <option value="{{ $plan->price }}">{{ $plan->name }} (Rs. {{ $plan->price }})</option>
+                                <option value="{{ $plan->name }}" data-price="{{ $plan->price }}">{{ $plan->name }} (Rs. {{ $plan->price }})</option>
                             @endforeach
                         </select>
                     </div>
@@ -60,7 +60,7 @@
                     <!-- Join Date -->
                     <div>
                         <label class="block text-gray-600 text-sm">Join Date</label>
-                        <input type="date" name="join_date" id="join_date" class="w-full border-gray-300 rounded-md" required>
+                        <input type="date" name="join_date" id="join_date" class="w-full border-gray-300 rounded-md" value="{{ \Carbon\Carbon::now()->toDateString() }}" required readonly>
                     </div>
 
                     <!-- Expiry Date (auto 1 month later) -->
@@ -85,30 +85,42 @@
         </div>
     </div>
 
-    <!-- JS for Expiry & Plan Fee -->
+   
     <script>
-        const joinDateInput = document.getElementById('join_date');
-        const expiryDateInput = document.getElementById('expiry_date');
+         //<!-- JS for Expiry & Plan Fee -->
         const planSelect = document.getElementById('plan');
         const feeInput = document.getElementById('fee');
-
-        // Auto set expiry date = join date + 1 month
-        joinDateInput.addEventListener('change', function() {
-            if (this.value) {
-                const joinDate = new Date(this.value);
-                const expiryDate = new Date(joinDate);
-                expiryDate.setMonth(joinDate.getMonth() + 1);
-
-                const year = expiryDate.getFullYear();
-                const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
-                const day = String(expiryDate.getDate()).padStart(2, '0');
-                expiryDateInput.value = `${year}-${month}-${day}`;
-            }
-        });
-
         // Auto set fee when plan selected
-        planSelect.addEventListener('change', function() {
-            feeInput.value = this.value;
-        });
-    </script>
+        // Get the plan dropdown and fee input elements
+
+    planSelect.addEventListener('change', function() {
+    // Get the selected option
+    const selectedOption = planSelect.options[planSelect.selectedIndex];
+
+    // Get the price from the data-price attribute
+    const price = selectedOption.getAttribute('data-price');
+
+    // Set the fee input's value to the price
+    feeInput.value = price;
+});
+    
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the Join Date and Expiry Date input elements
+    const joinDateInput = document.getElementById('join_date');
+    const expiryDateInput = document.getElementById('expiry_date');
+
+    // Set the Expiry Date (1 month after Join Date)
+    const joinDate = new Date(joinDateInput.value);
+    joinDate.setMonth(joinDate.getMonth() + 1);
+
+    // Format the expiry date to YYYY-MM-DD
+    const year = joinDate.getFullYear();
+    const month = (joinDate.getMonth() + 1).toString().padStart(2, '0');  // month is zero-based, so we add 1
+    const day = joinDate.getDate().toString().padStart(2, '0');
+
+    // Set the expiry date in the input field
+    expiryDateInput.value = `${year}-${month}-${day}`;
+});
+</script>
+
 </x-app-layout>

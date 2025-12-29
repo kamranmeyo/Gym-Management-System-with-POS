@@ -22,7 +22,7 @@
             @endif
 
             <!-- 🔹 Table -->
-            <table class="w-full border border-gray-200">
+            {{-- <table class="w-full border border-gray-200">
                 <thead class="bg-gray-200">
                     <tr>
                         <th class="px-4 py-2 text-left">Date</th>
@@ -41,7 +41,30 @@
                         </tr>
                     @endforelse
                 </tbody>
-            </table>
+            </table> --}}
+
+            <table class="w-full border border-gray-200">
+    <thead class="bg-gray-200">
+        <tr>
+            <th class="px-4 py-2 text-left">Date</th>
+            <th class="px-4 py-2 text-left">Fee Received</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse ($fees as $fee)
+            <tr class="border-t">
+                <td class="px-4 py-2">{{ $fee->last_fee_date }}</td>
+                <td class="px-4 py-2">Rs. {{ number_format($fee->fee, 2) }}</td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="2" class="px-4 py-2 text-center text-gray-500">No fees found for this range.</td>
+            </tr>
+        @endforelse
+    </tbody>
+</table>
+
+
 
             <!-- 🔹 Total Income -->
             @if ($fees->count() > 0)

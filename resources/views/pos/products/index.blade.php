@@ -9,7 +9,10 @@
             @if(session('success'))
                 <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">{{ session('success') }}</div>
             @endif
-
+                        @php
+                $user = auth()->user();
+                $isSuperAdmin = $user->hasRole('SuperAdmin');
+            @endphp
             <div class="overflow-x-auto">
                 <table class="w-full border">
                     <thead class="bg-gray-200">
@@ -31,12 +34,14 @@
                                 <td class="px-3 py-2">{{ $product->stock }}</td>
                                 <td class="px-3 py-2">{{ $product->description }}</td>
                                 <td class="px-3 py-2 text-center">
+                                     @if ($isSuperAdmin)
                                     <a href="{{ route('pos.products.edit', $product) }}" class="px-2 py-1 bg-blue-500 text-white rounded text-sm">Edit</a>
                                     <form action="{{ route('pos.products.destroy', $product) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button onclick="return confirm('Delete this product?')" class="px-2 py-1 bg-red-500 text-white rounded text-sm">Delete</button>
                                     </form>
+                                    @endif
                                 </td>
                             </tr>
                         @empty

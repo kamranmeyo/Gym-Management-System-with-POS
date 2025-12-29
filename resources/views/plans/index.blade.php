@@ -5,7 +5,10 @@
                 <h2 class="text-2xl font-semibold text-gray-700">🏋️ Plans</h2>
                 <a href="{{ route('plans.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded">Add Plan</a>
             </div>
-
+            @php
+                $user = auth()->user();
+                $isSuperAdmin = $user->hasRole('SuperAdmin');
+            @endphp
             @if(session('success'))
                 <div class="mb-4 text-green-600">{{ session('success') }}</div>
             @endif
@@ -28,11 +31,13 @@
                             <td class="border px-3 py-2">Rs. {{ number_format($plan->price, 0) }}</td>
                             <td class="border px-3 py-2">{{ $plan->description }}</td>
                             <td class="border px-3 py-2 text-center">
+                             @if ($isSuperAdmin)
                                 <a href="{{ route('plans.edit', $plan) }}" class="text-blue-600">Edit</a> |
                                 <form action="{{ route('plans.destroy', $plan) }}" method="POST" class="inline">
                                     @csrf @method('DELETE')
                                     <button onclick="return confirm('Delete this plan?')" class="text-red-600">Delete</button>
                                 </form>
+                                @endif
                             </td>
                         </tr>
                     @empty

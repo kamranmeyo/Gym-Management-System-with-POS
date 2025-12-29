@@ -30,11 +30,11 @@
                     </div>
                     <div>
                         <label class="block text-sm text-gray-600">Update Fee</label>
-                        <input type="date" id="feeDate" class="w-full border-gray-300 rounded p-2">
+                        <input type="date" id="feeDate" class="w-full border-gray-300 rounded p-2" >
                     </div>
                     <div class="col-span-2 flex justify-end mt-2">
                         <button id="updateFeeBtn" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
-                            Update Fee
+                            Update & Print
                         </button>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                 <audio id="successSound" src="{{ asset('sounds/success.mp3') }}"></audio>
 
                 <div class="mt-4 w-full">
-                    <label class="block text-sm text-gray-600">Or search by Phone:</label>
+                    <label class="block text-sm text-gray-600">Or Search by Phone & ID:</label>
                     <input type="text" id="searchPhone" class="w-full border-gray-300 rounded-md p-2">
                     <button id="searchPhoneBtn"
                             class="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 w-full">
@@ -72,7 +72,14 @@
         const startBtn = document.getElementById('startScan');
         const stopBtn = document.getElementById('stopScan');
         const html5QrCode = new Html5Qrcode("reader");
+    
         const successSound = document.getElementById('successSound');
+        const feeDateInput = document.getElementById('feeDate');
+          // Set today date (YYYY-MM-DD)
+        const today = new Date().toISOString().split('T')[0];
+        feeDateInput.value = today;
+        feeDateInput.setAttribute('readonly', true);
+
         let isScanning = false;
         let currentMemberId = null;
 
@@ -129,7 +136,7 @@
                 if (res.status === 'success') {
                     const m = res.data;
                     currentMemberId = m.id;
-
+                    document.getElementById('searchPhone').value = '';
                     document.getElementById('memberName').value = m.name ?? '-';
                     document.getElementById('memberPhone').value = m.phone ?? '-';
                     document.getElementById('memberPlan').value = m.plan ?? '-';
@@ -144,33 +151,74 @@
         }
 
         // ✅ Update fee API
-        document.getElementById('updateFeeBtn').addEventListener('click', () => {
-            const feeDate = document.getElementById('feeDate').value;
-            if (!currentMemberId || !feeDate) return alert('Select member and date first.');
+        // document.getElementById('updateFeeBtn').addEventListener('click', () => {
+        //     const feeDate = document.getElementById('feeDate').value;
+        //     if (!currentMemberId || !feeDate) return alert('Select member and date first.');
 
-            fetch("{{ route('fee.update') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                body: JSON.stringify({ member_id: currentMemberId, fee_date: feeDate })
-            })
-            .then(res => res.json())
-            .then(res => {
-                if (res.status === 'success') {
-                    const d = res.data;
-                    document.getElementById('lastFee').value = d.last_fee_date ?? '-';
-                    document.getElementById('nextFee').value = d.next_fee_due
-                        ? new Date(d.next_fee_due).toISOString().split('T')[0]
-                        : '-';
-                    successSound.play();
-                    alert(res.message);
-                } else {
-                    alert(res.message);
-                }
-            });
-        });
+        //     fetch("{{ route('fee.update') }}", {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //             "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        //         },
+        //         body: JSON.stringify({ member_id: currentMemberId, fee_date: feeDate })
+        //     })
+        //     .then(res => res.json())
+        //     .then(res => {
+        //         if (res.status === 'success') {
+        //             const d = res.data;
+        //             document.getElementById('lastFee').value = d.last_fee_date ?? '-';
+        //             document.getElementById('nextFee').value = d.next_fee_due
+        //                 ? new Date(d.next_fee_due).toISOString().split('T')[0]
+        //                 : '-';
+        //             successSound.play();
+        //             alert(res.message);
+        //         } else {
+        //             alert(res.message);
+        //         }
+        //     });
+        // });
+
+
+        document.getElementById('updateFeeBtn').addEventListener('click', () => {
+    const feeDate = document.getElementById('feeDate').value;
+    if (!currentMemberId || !feeDate) {
+        return alert('Select member first.');
+    }
+
+    fetch("{{ route('fee.update') }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({
+            member_id: currentMemberId,
+            fee_date: feeDate
+        })
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.status === 'success') {
+
+            // Update UI
+            document.getElementById('lastFee').value = res.data.last_fee_date;
+            document.getElementById('nextFee').value =
+                new Date(res.data.next_fee_due).toISOString().split('T')[0];
+
+            successSound.play();
+
+            // ✅ OPEN PRINT WINDOW
+            window.open(res.print_url, '_blank', 'width=350,height=600');
+        } else {
+            alert(res.message);
+        }
+    });
+});
+
+
+
+
     </script>
     <script>
   // Aaj ki date lo (format: YYYY-MM-DD)

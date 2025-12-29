@@ -48,7 +48,7 @@
 
                 <!-- ✅ Manual Search by Phone -->
                 <div class="mt-4 w-full">
-                    <label class="block text-sm text-gray-600">Or search by Phone:</label>
+                    <label class="block text-sm text-gray-600">Search by Phone or ID:</label>
                     <input type="text" id="searchPhone" class="w-full border-gray-300 rounded-md p-2">
                     <button id="searchPhoneBtn"
                             class="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 w-full">

@@ -124,10 +124,48 @@
 </div>
 
 
-                <a href="{{ route('attendance.index') }}"  
+
+<!-- Sidebar Menu -->
+<div x-data="{ open: false }" class="mb-2">
+    <!-- Parent Menu Button -->
+    <button 
+        @click="open = !open"
+        class="w-full flex justify-between items-center py-2.5 px-4 hover:bg-gray-700 text-left text-white"
+    >
+        <span>🕒 Attendance</span>
+        <!-- Down Arrow Icon -->
+        <svg :class="{ 'rotate-180': open }" 
+             class="w-4 h-4 transform transition-transform duration-200"
+             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 9l-7 7-7-7" />
+        </svg>
+    </button>
+
+    <!-- Submenu (hidden by default) -->
+    <div x-show="open" x-transition class="ml-6 mt-1 space-y-1" x-cloak>
+        <a href="{{ route('attendance.index') }}" 
+           class="block py-2.5 px-4 hover:bg-gray-700 rounded {{ request()->routeIs('attendance.index') ? 'bg-gray-800' : '' }}">
+            ✅️ Mark Attendance
+        </a>
+
+        <a href="{{ route('attendance.list') }}" 
+           class="block py-2.5 px-4 hover:bg-gray-700 rounded {{ request()->routeIs('attendance.list') ? 'bg-gray-800' : '' }}">
+            👁️ View Attendance
+        </a>
+    </div>
+</div>
+
+
+
+
+
+
+
+                {{-- <a href="{{ route('attendance.index') }}"  
                    class="block py-2.5 px-4 hover:bg-gray-700 {{ request()->routeIs('attendance.index') ? 'bg-gray-800' : '' }}">
                     🕒 Mark Attendance
-                </a>
+                </a> --}}
 
 
 
@@ -166,6 +204,44 @@
         <a href="{{ route('pos.products.index') }}" 
            class="block py-2.5 px-4 hover:bg-gray-700 rounded {{ request()->routeIs('pos.products.index') ? 'bg-gray-800' : '' }}">
             📋 Products
+        </a>
+    </div>
+</div>
+
+
+
+<!-- Sidebar Menu Expense-->
+<div x-data="{ open: false }" class="mb-2">
+    <!-- Parent Menu Button -->
+    <button 
+        @click="open = !open"
+        class="w-full flex justify-between items-center py-2.5 px-4 hover:bg-gray-700 text-left text-white"
+    >
+        <span>💰 Expense</span>
+        <!-- Down Arrow Icon -->
+        <svg :class="{ 'rotate-180': open }" 
+             class="w-4 h-4 transform transition-transform duration-200"
+             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 9l-7 7-7-7" />
+        </svg>
+    </button>
+
+    <!-- Submenu (hidden by default) -->
+    <div x-show="open" x-transition class="ml-6 mt-1 space-y-1" x-cloak>
+
+        <a href="{{ route('expenses.index') }}" 
+           class="block py-2.5 px-4 hover:bg-gray-700 rounded {{ request()->routeIs('expenses.index') ? 'bg-gray-800' : '' }}">
+            📝 List
+        </a>
+
+        <a href="{{ route('expenses.report') }}" 
+           class="block py-2.5 px-4 hover:bg-gray-700 rounded {{ request()->routeIs('expenses.report') ? 'bg-gray-800' : '' }}">
+            📋 Report
+        </a>
+                <a href="{{ route('expense-categories.index') }}" 
+           class="block py-2.5 px-4 hover:bg-gray-700 rounded {{ request()->routeIs('expense-categories.index') ? 'bg-gray-800' : '' }}">
+            📂 Categories
         </a>
     </div>
 </div>
@@ -216,5 +292,29 @@
             sidebar.classList.toggle('hidden');
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    {{-- DataTables CSS --}}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+
+{{-- jQuery --}}
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+{{-- DataTables --}}
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+{{-- Export Buttons --}}
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+
+
+
 </body>
 </html>

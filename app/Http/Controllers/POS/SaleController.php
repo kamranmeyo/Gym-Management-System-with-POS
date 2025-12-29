@@ -80,57 +80,57 @@ class SaleController extends Controller
             return back()->with('error','Error: '.$e->getMessage());
         }
     }
-public function store2(Request $request)
-{
-    // decode the JSON string from the hidden input
-    $cart = json_decode($request->input('cart'), true);
+// public function store2(Request $request)
+// {
+//     // decode the JSON string from the hidden input
+//     $cart = json_decode($request->input('cart'), true);
 
-    if (!$cart || !is_array($cart) || count($cart) === 0) {
-        return back()->with('error','Cart empty');
-    }
+//     if (!$cart || !is_array($cart) || count($cart) === 0) {
+//         return back()->with('error','Cart empty');
+//     }
 
-    DB::beginTransaction();
-    try {
-        $subtotal = 0;
-        foreach ($cart as $item) {
-            $subtotal += $item['price'] * $item['qty'];
-        }
+//     DB::beginTransaction();
+//     try {
+//         $subtotal = 0;
+//         foreach ($cart as $item) {
+//             $subtotal += $item['price'] * $item['qty'];
+//         }
 
-        $tax = 0;
-        $total = round($subtotal + $tax, 2);
+//         $tax = 0;
+//         $total = round($subtotal + $tax, 2);
 
-        $sale = Sale::create([
-            'invoice_no' => 'INV-' . strtoupper(Str::random(8)),
-            'subtotal' => $subtotal,
-            'tax' => $tax,
-            'total' => $total,
-            'payment_method' => $request->payment_method ?? 'Cash',
-        ]);
+//         $sale = Sale::create([
+//             'invoice_no' => 'INV-' . strtoupper(Str::random(8)),
+//             'subtotal' => $subtotal,
+//             'tax' => $tax,
+//             'total' => $total,
+//             'payment_method' => $request->payment_method ?? 'Cash',
+//         ]);
 
-        foreach ($cart as $item) {
-            $product = Product::findOrFail($item['productId']);
-            if ($product->stock < $item['qty']) {
-                DB::rollBack();
-                return back()->with('error', 'Not enough stock for ' . $product->name);
-            }
-            SaleItem::create([
-                'sale_id' => $sale->id,
-                'product_id' => $product->id,
-                'quantity' => $item['qty'],
-                'price' => $item['price'],
-                'subtotal' => $item['price'] * $item['qty'],
-            ]);
-            $product->decrement('stock', $item['qty']);
-        }
+//         foreach ($cart as $item) {
+//             $product = Product::findOrFail($item['productId']);
+//             if ($product->stock < $item['qty']) {
+//                 DB::rollBack();
+//                 return back()->with('error', 'Not enough stock for ' . $product->name);
+//             }
+//             SaleItem::create([
+//                 'sale_id' => $sale->id,
+//                 'product_id' => $product->id,
+//                 'quantity' => $item['qty'],
+//                 'price' => $item['price'],
+//                 'subtotal' => $item['price'] * $item['qty'],
+//             ]);
+//             $product->decrement('stock', $item['qty']);
+//         }
 
-        DB::commit();
+//         DB::commit();
 
-        return redirect()->route('pos.sales.index')->with('success','Sale recorded');
-    } catch (\Throwable $e) {
-        DB::rollBack();
-        return back()->with('error','Error: '.$e->getMessage());
-    }
-}
+//         return redirect()->route('pos.sales.index')->with('success','Sale recorded');
+//     } catch (\Throwable $e) {
+//         DB::rollBack();
+//         return back()->with('error','Error: '.$e->getMessage());
+//     }
+// }
 
 public function store(Request $request)
 {
