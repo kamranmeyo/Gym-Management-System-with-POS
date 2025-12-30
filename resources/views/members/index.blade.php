@@ -56,21 +56,20 @@
                             <!-- Actions -->
                             <td class="px-4 py-2 text-center space-x-2">
                                 @if ($isSuperAdmin)
-                                <a href="{{ route('members.edit', $member->id) }}" class="px-2 py-1 bg-blue-500 text-white rounded">Edit</a>
+                                <a href="{{ route('members.edit', $member->id) }}" class="px-2 py-1 bg-blue-500 text-white rounded">✏️ Edit</a>
                                 <form action="{{ route('members.destroy', $member->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" 
                                             onclick="return confirm('Delete this member?')" 
-                                            class="px-2 py-1 bg-red-500 text-white rounded">Delete</button>
+                                            class="px-2 py-1 bg-red-500 text-white rounded">🗑 Delete</button>
                                 </form>
                                 @endif
                                 <!-- View QR Button -->
-                                <button type="button" 
-                                        class="px-2 py-1 bg-green-600 text-white rounded" 
-                                        onclick="showQR('{{ $member->member_code }}')">
-                                    View QR
-                                </button>
+                               <a href="{{ route('fee.print', $member->id) }}"
+   class="px-2 py-1 bg-green-600 text-white rounded">
+    🖨️ Re-print
+</a>
                             </td>
                         </tr>
                     @endforeach

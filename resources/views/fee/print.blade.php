@@ -20,11 +20,16 @@
 <div class="center">
     <h3>C4 Fitness Gym</h3>
     <p>Fee Receipt</p>
+    <p>Fee is not refundable. For quries Please contact 0317-5793957</p>
 </div>
 
 <div class="line"></div>
 
 <table>
+        <tr>
+        <td>ID:</td>
+        <td>{{ $member->id }}</td>
+    </tr>
     <tr>
         <td>Name:</td>
         <td>{{ $member->name }}</td>

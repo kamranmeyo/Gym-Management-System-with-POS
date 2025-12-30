@@ -115,7 +115,7 @@
             .then(res => {
                 if (res.status === "success") {
                     const member = res.data;
-
+                    
                     // 🔊 Play success sound
                     successSound.play();
 
@@ -127,7 +127,7 @@
 
                     const statusInput = document.getElementById("status");
                     statusInput.className = "w-full rounded p-2 font-semibold text-center"; // reset
-
+                    document.getElementById('searchPhone').value = '';
                     if (member.is_expired) {
                         statusInput.value = "❌ Membership Expired! Please pay fee.";
                         statusInput.classList.add('bg-red-100', 'text-red-600');
