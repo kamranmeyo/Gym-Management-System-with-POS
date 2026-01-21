@@ -255,8 +255,8 @@
 
             </nav>
 
-            <div class="absolute bottom-0 w-full border-t border-gray-700 p-4 text-center text-sm text-gray-400">
-                <b style="color: black">Software Made by 0301-6228258</b>
+            <div class="fixed bottom-0 left-0 w-64 border-t border-gray-700 p-4 text-center text-sm text-gray-400">
+                <b style="color: white">Software Made by 0301-6228258</b>
             </div>
         </aside>
 

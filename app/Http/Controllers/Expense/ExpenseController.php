@@ -59,8 +59,8 @@ public function report(Request $request)
 
     // Income (Members Fee)
     $income = Member::query()
-        ->when($from, fn ($q) => $q->whereDate('created_at', '>=', $from))
-        ->when($to, fn ($q) => $q->whereDate('created_at', '<=', $to))
+        ->when($from, fn ($q) => $q->whereDate('last_fee_date', '>=', $from))
+        ->when($to, fn ($q) => $q->whereDate('last_fee_date', '<=', $to))
         ->sum('Fee');
 
     return view('expenses.report', compact(

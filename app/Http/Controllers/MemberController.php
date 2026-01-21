@@ -19,11 +19,15 @@ class MemberController extends Controller
     $user = auth()->user();
 
     if ($user->hasRole('SuperAdmin')) {
-        $members = Member::all();
+        $members = Member::orderBy('id', 'desc')->get();
     } elseif ($user->hasRole('MaleUser')) {
-        $members = Member::where('gender', '1')->get();
+        $members = Member::where('gender', '1')
+                         ->orderBy('id', 'desc')
+                         ->get();
     } elseif ($user->hasRole('FemaleUser')) {
-        $members = Member::where('gender', '2')->get();
+        $members = Member::where('gender', '2')
+                         ->orderBy('id', 'desc')
+                         ->get();
     }
 
     // Default empty users array
