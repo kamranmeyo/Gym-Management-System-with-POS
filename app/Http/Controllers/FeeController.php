@@ -47,30 +47,6 @@ class FeeController extends Controller
         ]);
     }
 
-    // Update Fee
-    // public function update_old(Request $request)
-    // {
-    //     $request->validate([
-    //         'member_id' => 'required|integer|exists:members,id',
-    //         'fee_date' => 'required|date',
-    //     ]);
-
-    //     $member = Member::findOrFail($request->member_id);
-
-    //     $member->last_fee_date = $request->fee_date;
-    //     $member->next_fee_due = Carbon::parse($request->fee_date)->addMonth();
-    //     $member->save();
-
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'message' => 'Fee updated successfully',
-    //         'data' => [
-    //             'last_fee_date' => $member->last_fee_date,
-    //             'next_fee_due' => $member->next_fee_due,
-    //         ]
-    //     ]);
-    // }
-
 
 
     public function update(Request $request)
@@ -138,10 +114,6 @@ public function print(Member $member)
 {
     return view('fee.print', compact('member'));
 }
-
-
-
-
 
 
 }

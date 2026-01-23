@@ -1,6 +1,20 @@
 <x-app-layout>
     <div class="p-6 bg-gray-100 min-h-screen">
         <div class="max-w-3xl mx-auto bg-white p-6 shadow rounded-lg">
+
+@if (session('error'))
+    <div
+        x-data="{ show: true }"
+        x-show="show"
+        x-init="setTimeout(() => show = false, 4000)"
+        x-transition
+        class="fixed top-5 right-16 bg-red-600 text-white px-4 py-3 rounded shadow-lg z-50"
+    >
+        {{ session('error') }}
+    </div>
+@endif
+
+
             <h2 class="text-2xl font-semibold mb-4 text-gray-700">✏️ Edit Member</h2>
 
             <form method="POST" action="{{ route('members.update', $member->id) }}">
@@ -67,13 +81,13 @@
                     <!-- Join Date -->
                     <div>
                         <label class="block text-gray-600 text-sm">Join Date</label>
-                        <input type="date" name="join_date" id="join_date" value="{{ $member->join_date }}" class="w-full border-gray-300 rounded-md" required>
+                        <input type="date" name="join_date" id="join_date" value="{{ $member->join_date }}" class="w-full border-gray-300 rounded-md" style="background-color: #F3F4F6;"  disabled>
                     </div>
 
                     <!-- Expiry Date -->
                     <div>
                         <label class="block text-gray-600 text-sm">Expiry Date</label>
-                        <input type="date" name="expiry_date" id="expiry_date" value="{{ $member->expiry_date }}" class="w-full border-gray-300 rounded-md">
+                        <input type="date" name="expiry_date" id="expiry_date" value="{{ $member->next_fee_due }}" class="w-full border-gray-300 rounded-md" style="background-color: #F3F4F6;">
                     </div>
 
                     <!-- Comment -->

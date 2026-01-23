@@ -91,7 +91,6 @@
 
 <!-- Load Alpine.js (once in your layout, usually in <head> or before </body>) -->
 <script src="https://unpkg.com/alpinejs" defer></script>
-
 <!-- Sidebar Menu -->
 <div x-data="{ open: false }" class="mb-2">
     <!-- Parent Menu Button -->

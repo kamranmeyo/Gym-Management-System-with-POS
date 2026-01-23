@@ -33,35 +33,35 @@ class MemberController extends Controller
     // Default empty users array
     $users = [];
 
-    //------------------------ Code for HIKVision Machine--------------------
-    try {
-        $requestUrl = env('HIKVISION_BASE_URL')
-            . '/ISAPI/AccessControl/UserInfo/Search?format=json';
+    //------------------------ (Code for HIKVision Machine) Machine is not available so i m comment the code on Adeel Request due to some slow response
+    // try {
+    //     $requestUrl = env('HIKVISION_BASE_URL')
+    //         . '/ISAPI/AccessControl/UserInfo/Search?format=json';
 
-        $payload = [
-            'UserInfoSearchCond' => [
-                'searchID' => (string) time(),
-                'searchResultPosition' => 0,
-                'maxResults' => 30
-            ]
-        ];
+    //     $payload = [
+    //         'UserInfoSearchCond' => [
+    //             'searchID' => (string) time(),
+    //             'searchResultPosition' => 0,
+    //             'maxResults' => 30
+    //         ]
+    //     ];
 
-        $response = Http::withOptions([
-            'auth' => ['admin', '1122@Abc', 'digest'],
-            'timeout' => 5, // reduce timeout so page loads faster
-        ])->withHeaders([
-            'Content-Type' => 'application/json'
-        ])->post($requestUrl, $payload);
+    //     $response = Http::withOptions([
+    //         'auth' => ['admin', '1122@Abc', 'digest'],
+    //         'timeout' => 5, // reduce timeout so page loads faster
+    //     ])->withHeaders([
+    //         'Content-Type' => 'application/json'
+    //     ])->post($requestUrl, $payload);
 
-        if ($response->successful()) {
-            $data = $response->json();
-            $users = $data['UserInfoSearch']['UserInfo'] ?? [];
-        }
+    //     if ($response->successful()) {
+    //         $data = $response->json();
+    //         $users = $data['UserInfoSearch']['UserInfo'] ?? [];
+    //     }
 
-    } catch (ConnectionException $e) {
-        // Device offline → silently ignore
-        $users = [];
-    }
+    // } catch (ConnectionException $e) {
+    //     // Device offline → silently ignore
+    //     $users = [];
+    // }
     //------------------------ End HIKVision Code--------------------
 
     return view('members.index', compact('members', 'users'));
@@ -272,58 +272,58 @@ public function store(Request $request)
         'is_synced' => false,
     ]);
 
-    // 🔄 Try to sync with machine
-    try {
+    // 🔄 Try to sync with machine --- Machine is not available so i m comment the code on Adeel Request due to some slow response
+    // try {
 
-        $payload = [
-            'UserInfo' => [
-                'employeeNo' => (string) $member->id,
-                'name' => $member->name,
-                'userType' => 'normal',
-                'doorRight' => '1',
-                'RightPlan' => [
-                    [
-                        'doorNo' => 1,
-                        'planTemplateNo' => '1'
-                    ]
-                ],
-                'Valid' => [
-                    'enable' => true,
-                    'timeType' => 'UTC',
-                    'beginTime' => Carbon::parse($validated['join_date'])
-                        ->format('Y-m-d\TH:i:s+08:00'),
-                    'endTime' => Carbon::parse($validated['expiry_date'])
-                        ->format('Y-m-d\TH:i:s+08:00'),
-                ]
-            ]
-        ];
+    //     $payload = [
+    //         'UserInfo' => [
+    //             'employeeNo' => (string) $member->id,
+    //             'name' => $member->name,
+    //             'userType' => 'normal',
+    //             'doorRight' => '1',
+    //             'RightPlan' => [
+    //                 [
+    //                     'doorNo' => 1,
+    //                     'planTemplateNo' => '1'
+    //                 ]
+    //             ],
+    //             'Valid' => [
+    //                 'enable' => true,
+    //                 'timeType' => 'UTC',
+    //                 'beginTime' => Carbon::parse($validated['join_date'])
+    //                     ->format('Y-m-d\TH:i:s+08:00'),
+    //                 'endTime' => Carbon::parse($validated['expiry_date'])
+    //                     ->format('Y-m-d\TH:i:s+08:00'),
+    //             ]
+    //         ]
+    //     ];
 
-        $response = Http::withOptions([
-            'auth' => ['admin', '1122@Abc', 'digest'],
-            'timeout' => 5,
-        ])->post(
-            env('HIKVISION_BASE_URL') . '/ISAPI/AccessControl/UserInfo/Record?format=json',
-            $payload
-        );
+    //     $response = Http::withOptions([
+    //         'auth' => ['admin', '1122@Abc', 'digest'],
+    //         'timeout' => 5,
+    //     ])->post(
+    //         env('HIKVISION_BASE_URL') . '/ISAPI/AccessControl/UserInfo/Record?format=json',
+    //         $payload
+    //     );
 
-        if ($response->successful()) {
-            $member->update(['is_synced' => true]);
-        } else {
-            throw new \Exception($response->body());
-        }
+    //     if ($response->successful()) {
+    //         $member->update(['is_synced' => true]);
+    //     } else {
+    //         throw new \Exception($response->body());
+    //     }
 
-    } catch (\Exception $e) {
+    // } catch (\Exception $e) {
 
-        // ❗ Keep member saved, mark sync failed
-        $member->update([
-            'sync_error' => $e->getMessage()
-        ]);
+    //     // ❗ Keep member saved, mark sync failed
+    //     $member->update([
+    //         'sync_error' => $e->getMessage()
+    //     ]);
 
-        \Log::warning('Machine offline, member pending sync', [
-            'member_id' => $member->id,
-            'error' => $e->getMessage()
-        ]);
-    }
+    //     \Log::warning('Machine offline, member pending sync', [
+    //         'member_id' => $member->id,
+    //         'error' => $e->getMessage()
+    //     ]);
+    // }
 
     return redirect()
         ->route('members.index')
@@ -343,7 +343,7 @@ public function store(Request $request)
     }
 
 // Update member (DB + Hikvision)
-public function update(Request $request, Member $member)
+public function update_Old(Request $request, Member $member) // 100% working with machine-------------------------------------- Machine is not available so i m comment the code on Adeel Request due to some slow response
 {
     $validated = $request->validate([
         'name' => 'required|string|max:255',
@@ -450,7 +450,38 @@ $endTime = Carbon::parse($request->expiry_date)
 }
 
 
+public function update(Request $request, $id)
+{
+    // ✅ Validate request
+    $request->validate([
+        'name'             => 'required|string|max:255',
+        'phone'            => 'required|string|max:20',
+        'gender'           => 'required|in:1,2',
+        'membership_type'  => 'required|string',
+        'fee'              => 'required|numeric|min:0',
+        'fee_method'       => 'required|in:1,2,3,4',
+        'comment'          => 'nullable|string',
+    ]);
 
+    // 🔍 Find member
+    $member = Member::findOrFail($id);
+
+    // ✏️ Update member
+    $member->update([
+        'name'             => $request->name,
+        'phone'            => $request->phone,
+        'gender'           => $request->gender,
+        'membership_type'  => $request->membership_type,
+        'fee'              => $request->fee,
+        'fee_method'       => $request->fee_method,
+        'comment'          => $request->comment,
+    ]);
+
+    // ✅ Redirect with success message
+    return redirect()
+        ->route('members.index')
+        ->with('success', 'Member updated successfully!');
+}
 
 
 
@@ -464,35 +495,35 @@ public function destroy(Member $member)
         DB::beginTransaction();
 
         // 1️⃣ Start device deletion
-        $deleteUrl = $baseUrl . '/ISAPI/AccessControl/UserInfoDetail/Delete?format=json';
+       // $deleteUrl = $baseUrl . '/ISAPI/AccessControl/UserInfoDetail/Delete?format=json';
 
         // Correct JSON body
-        $payload = [
-            'UserInfoDetail' => [
-                'mode' => 'byEmployeeNo',  // Specify deletion mode as 'byEmployeeNo'
-                'EmployeeNoList' => [
-                    [
-                        'employeeNo' => (string) $member->id  // The employee number (user code)
-                    ]
-                ]
-            ]
-        ];
+        // $payload = [
+        //     'UserInfoDetail' => [
+        //         'mode' => 'byEmployeeNo',  // Specify deletion mode as 'byEmployeeNo'
+        //         'EmployeeNoList' => [
+        //             [
+        //                 'employeeNo' => (string) $member->id  // The employee number (user code)
+        //             ]
+        //         ]
+        //     ]
+        // ];
 
         // Send DELETE request to the device
-        $response = Http::withOptions([
-            'auth' => ['admin', '1122@Abc', 'digest'],
-            'timeout' => 15,
-        ])->withHeaders([
-            'Content-Type' => 'application/json'
-        ])->put($deleteUrl, $payload);
+        // $response = Http::withOptions([
+        //     'auth' => ['admin', '1122@Abc', 'digest'],
+        //     'timeout' => 15,
+        // ])->withHeaders([
+        //     'Content-Type' => 'application/json'
+        // ])->put($deleteUrl, $payload);
 
-        // Check if the device responded successfully
-        if (!$response->successful()) {
-            // Log the error for further debugging
-            Log::error('Failed to delete user from device: ' . $response->body());
-            return response($response->body(), $response->status())
-                ->header('Content-Type', 'application/json');
-        }
+        // // Check if the device responded successfully
+        // if (!$response->successful()) {
+        //     // Log the error for further debugging
+        //     Log::error('Failed to delete user from device: ' . $response->body());
+        //     return response($response->body(), $response->status())
+        //         ->header('Content-Type', 'application/json');
+        // }
 
         // 2️⃣ Poll DeleteProcess endpoint until progress = 100
         // $progress = 0;
@@ -517,7 +548,7 @@ public function destroy(Member $member)
 
         // } while ($progress < 100); // Poll until the progress reaches 100%
 
-        // // 3️⃣ Delete from the database after device deletion completes
+        //  3️⃣ Delete from the database after device deletion completes
         // // Log to track DB deletion
         // Log::info("Deleting member with ID: {$member->id} from the database.");
         $member->delete();

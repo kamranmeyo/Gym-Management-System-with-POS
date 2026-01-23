@@ -1,13 +1,25 @@
+
 <x-app-layout>
+
     <div class="p-6 bg-gray-100 min-h-screen">
         <div class="bg-white p-6 shadow rounded-lg">
-
-        @if(auth()->user()->hasRole('SuperAdmin'))
+  @if (session('success'))
+    <div
+        x-data="{ show: true }"
+        x-show="show"
+        x-init="setTimeout(() => show = false, 3000)"
+        x-transition
+        class="mb-4 p-4 rounded bg-green-100 text-green-700"
+    >
+        {{ session('success') }}
+    </div>
+@endif
+        {{-- @if(auth()->user()->hasRole('SuperAdmin'))
         <button onclick="syncMembers()"
             class="mb-4 px-4 py-2 bg-purple-600 rounded">
             🔄 Sync Members to Machine
         </button>
-        @endif
+        @endif --}}
 
             <h2 class="text-2xl font-semibold mb-4 text-gray-700">👥 Members List From DB</h2>
             @php
@@ -80,7 +92,7 @@
 </div> --}}
         </div>
         <br>
-        <div class="bg-white p-6 shadow rounded-lg">
+        {{-- <div class="bg-white p-6 shadow rounded-lg">------------------------------------------------- Machine is not available so i m comment the code on Adeel Request due to some slow response
             <h2 class="text-2xl font-semibold mb-4 text-gray-700">👥 Members List From Machine</h2>
             @php
                 $user = auth()->user();
@@ -120,7 +132,7 @@
             </td>
 
             <td class="px-4 py-2">
-                {{-- example: calculate next fee --}}
+                {{-- example: calculate next fee 
                 {{ \Carbon\Carbon::parse($person['Valid']['endTime'] ?? null)
                     ->addMonth()
                     ->format('Y-m-d') ?? '-' }}
@@ -137,7 +149,7 @@
     @endforelse
 </tbody>
             </table>
-        </div>
+        </div> --}}
     </div>
 
         
@@ -188,7 +200,7 @@ $(document).ready(function () {
     });
 });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <script>
 function syncMembers() {
