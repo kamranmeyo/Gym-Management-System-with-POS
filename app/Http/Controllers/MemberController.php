@@ -13,9 +13,6 @@ class MemberController extends Controller
     // Show list of members
    public function index()
 {
-      if (!auth()->user()->hasRole('SuperAdmin')) {
-        abort(403, 'Unauthorized');
-    }
     $user = auth()->user();
 
     if ($user->hasRole('SuperAdmin')) {
@@ -24,10 +21,16 @@ class MemberController extends Controller
         $members = Member::where('gender', '1')
                          ->orderBy('id', 'desc')
                          ->get();
+                         $members->each(function ($member) {
+                            $member->phone = '------';
+                        });
     } elseif ($user->hasRole('FemaleUser')) {
         $members = Member::where('gender', '2')
                          ->orderBy('id', 'desc')
                          ->get();
+                        $members->each(function ($member) {
+                            $member->phone = '------';
+                        });
     }
 
     // Default empty users array
