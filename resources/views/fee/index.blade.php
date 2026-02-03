@@ -30,7 +30,7 @@
                     </div>
                     <div>
                         <label class="block text-sm text-gray-600">Update Fee</label>
-                        <input type="date" id="feeDate" class="w-full bg-gray-200 rounded p-2" readonly>
+                        <input type="date" id="feeDate" class="w-full border-gray-300 rounded p-2" >
                     </div>
                     <div class="col-span-2 flex justify-end mt-2">
                         <button id="updateFeeBtn" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
@@ -144,9 +144,6 @@
                     document.getElementById('nextFee').value = m.next_fee_due
                         ? new Date(m.next_fee_due).toISOString().split('T')[0]
                         : '-';
-                        document.getElementById('feeDate').value = m.next_fee_due
-    ? new Date(m.next_fee_due).toISOString().split('T')[0]
-    : '';
                 } else {
                     alert(res.message);
                 }
@@ -184,7 +181,7 @@
 
 
         document.getElementById('updateFeeBtn').addEventListener('click', () => {
-    const feeDate = document.getElementById('nextFee').value;
+    const feeDate = document.getElementById('feeDate').value;
     if (!currentMemberId || !feeDate) {
         return alert('Select member first.');
     }
