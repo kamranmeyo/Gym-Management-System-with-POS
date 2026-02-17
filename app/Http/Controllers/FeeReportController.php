@@ -24,8 +24,8 @@ public function index(Request $request)
 
     // 🔹 Fetch individual fee records
     $query = Member::query()
-        ->select('last_fee_date', 'fee')
-        ->whereBetween('last_fee_date', [$from, $to]);
+        ->select('FeeSubmitDate', 'fee','name','updated_at')
+        ->whereBetween('FeeSubmitDate', [$from, $to]);
 
     if ($user->hasRole('MaleUser')) {
         $query->where('gender', 1);
@@ -33,7 +33,7 @@ public function index(Request $request)
         $query->where('gender', 2);
     }
 
-    $fees = $query->orderBy('last_fee_date', 'desc')->get();
+    $fees = $query->orderBy('FeeSubmitDate', 'desc')->get();
 
     // Total income
     $totalIncome = $fees->sum('fee');

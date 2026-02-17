@@ -19,6 +19,7 @@ class Member extends Model
         'gender',
         'last_fee_date',
         'next_fee_due',
+        'FeeSubmitDate',
     ];
 
 

@@ -62,6 +62,7 @@ class FeeController extends Controller
 
     // Update fee in MySQL
     $member->last_fee_date = $request->fee_date;
+    $member->FeeSubmitDate = now()->toDateString();
     $member->next_fee_due = Carbon::parse($request->fee_date)->addMonth();
     $member->save();
 

@@ -46,14 +46,17 @@
             <table class="w-full border border-gray-200">
     <thead class="bg-gray-200">
         <tr>
-            <th class="px-4 py-2 text-left">Date</th>
+            <th class="px-4 py-2 text-left">Name</th>
+            <th class="px-4 py-2 text-left">Date & Time</th>
             <th class="px-4 py-2 text-left">Fee Received</th>
+            
         </tr>
     </thead>
     <tbody>
         @forelse ($fees as $fee)
             <tr class="border-t">
-                <td class="px-4 py-2">{{ $fee->last_fee_date }}</td>
+                <td class="px-4 py-2">{{ $fee->name }}</td>
+                <td class="px-4 py-2">{{ $fee->FeeSubmitDate}} - {{$fee->updated_at->format('h:i A')}}</td>
                 <td class="px-4 py-2">Rs. {{ number_format($fee->fee, 2) }}</td>
             </tr>
         @empty
