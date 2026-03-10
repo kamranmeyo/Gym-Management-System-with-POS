@@ -45,18 +45,7 @@
                 </div>
             </div>
 
-            <!-- QR Scanner -->
             <div class="bg-white p-6 rounded-lg shadow flex flex-col items-center">
-                <div id="reader" style="width: 300px;"></div>
-                <button id="startScan"
-                        class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
-                    Start Scanning
-                </button>
-                <button id="stopScan"
-                        class="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 hidden">
-                    Stop Scanning
-                </button>
-
                 <audio id="successSound" src="{{ asset('sounds/success.mp3') }}"></audio>
 
                 <div class="mt-4 w-full">
@@ -71,54 +60,16 @@
         </div>
     </div>
 
-    <!-- Include HTML5 QR Code Scanner -->
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        const startBtn = document.getElementById('startScan');
-        const stopBtn = document.getElementById('stopScan');
-        const html5QrCode = new Html5Qrcode("reader");
-    
+   
         const successSound = document.getElementById('successSound');
         const feeDateInput = document.getElementById('feeDate');
           // Set today date (YYYY-MM-DD)
         const today = new Date().toISOString().split('T')[0];
         feeDateInput.value = today;
         feeDateInput.setAttribute('readonly', true);
-
-        let isScanning = false;
         let currentMemberId = null;
-
-        // ✅ Start scanning
-        startBtn.addEventListener('click', () => {
-            if (!isScanning) {
-                Html5Qrcode.getCameras().then(cameras => {
-                    const cameraId = cameras.length ? cameras[0].id : null;
-                    html5QrCode.start(
-                        cameraId,
-                        { fps: 10, qrbox: 200 },
-                        qrCodeMessage => handleScan(qrCodeMessage),
-                        errorMessage => {}
-                    );
-                    isScanning = true;
-                    startBtn.classList.add('hidden');
-                    stopBtn.classList.remove('hidden');
-                });
-            }
-        });
-
-        // ✅ Stop scanning
-        stopBtn.addEventListener('click', () => {
-            html5QrCode.stop();
-            isScanning = false;
-            startBtn.classList.remove('hidden');
-            stopBtn.classList.add('hidden');
-        });
-
-        // ✅ Handle scanned QR code
-        function handleScan(code) {
-            successSound.play();
-            searchMember({ member_code: code });
-        }
 
         // ✅ Manual search by phone
         document.getElementById('searchPhoneBtn').addEventListener('click', () => {
@@ -153,45 +104,25 @@
                     ? new Date(m.next_fee_due).toISOString().split('T')[0]
                     : '';
                 } else {
-                    alert(res.message);
+                    //alert(res.message);
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: res.message
+                });
                 }
             });
         }
 
-        // ✅ Update fee API
-        // document.getElementById('updateFeeBtn').addEventListener('click', () => {
-        //     const feeDate = document.getElementById('feeDate').value;
-        //     if (!currentMemberId || !feeDate) return alert('Select member and date first.');
-
-        //     fetch("{{ route('fee.update') }}", {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             "X-CSRF-TOKEN": "{{ csrf_token() }}"
-        //         },
-        //         body: JSON.stringify({ member_id: currentMemberId, fee_date: feeDate })
-        //     })
-        //     .then(res => res.json())
-        //     .then(res => {
-        //         if (res.status === 'success') {
-        //             const d = res.data;
-        //             document.getElementById('lastFee').value = d.last_fee_date ?? '-';
-        //             document.getElementById('nextFee').value = d.next_fee_due
-        //                 ? new Date(d.next_fee_due).toISOString().split('T')[0]
-        //                 : '-';
-        //             successSound.play();
-        //             alert(res.message);
-        //         } else {
-        //             alert(res.message);
-        //         }
-        //     });
-        // });
-
-
         document.getElementById('updateFeeBtn').addEventListener('click', () => {
     const feeDate = document.getElementById('nextFee').value;
     if (!currentMemberId || !feeDate) {
-        return alert('Select member first.');
+        //return alert('Select member first.');
+        return Swal.fire({
+        icon: 'warning',
+        title: 'No Member Selected',
+        text: 'Please search and select a member first.'
+    });
     }
 
     fetch("{{ route('fee.update') }}", {
@@ -226,13 +157,25 @@
                         statusInput.classList.add('bg-green-100', 'text-green-600');
                     }
 
+Swal.fire({
+    icon: 'success',
+    title: 'Fee Submitted',
+    text: 'Fee submitted successfully!',
+    timer: 2000,
+    showConfirmButton: false
+});
 
             successSound.play();
 
             // ✅ OPEN PRINT WINDOW
             window.open(res.print_url, '_blank', 'width=350,height=600');
         } else {
-            alert(res.message);
+            //alert(res.message);
+            Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: res.message
+});
         }
     });
 });
