@@ -115,7 +115,7 @@
         }
 
         document.getElementById('updateFeeBtn').addEventListener('click', () => {
-    const feeDate = document.getElementById('nextFee').value;
+    const feeDate = document.getElementById('feeDate').value;
     if (!currentMemberId || !feeDate) {
         //return alert('Select member first.');
         return Swal.fire({
@@ -195,3 +195,94 @@ Swal.fire({
   dateInput.setAttribute("max", today);
 </script>
 </x-app-layout>
+
+
+
+
+{{-- 1️⃣ Replace Your Current Click Event
+
+Find this part in your code:
+
+document.getElementById('updateFeeBtn').addEventListener('click', () => {
+
+
+Replace the whole function with this:
+
+document.getElementById('updateFeeBtn').addEventListener('click', () => {
+
+    const feeDate = document.getElementById('nextFee').value;
+
+    if (!currentMemberId || !feeDate) {
+        return Swal.fire({
+            icon: 'warning',
+            title: 'No Member Selected',
+            text: 'Please search and select a member first.'
+        });
+    }
+
+    // ✅ Confirmation Alert
+    Swal.fire({
+        title: 'Submit Fee?',
+        text: "Are you sure you want to submit this member's fee?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#4f46e5',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Submit Fee'
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+
+            fetch("{{ route('fee.update') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    member_id: currentMemberId,
+                    fee_date: feeDate
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+
+                if (res.status === 'success') {
+
+                    document.getElementById('lastFee').value = res.data.last_fee_date;
+                    document.getElementById('nextFee').value =
+                        new Date(res.data.next_fee_due).toISOString().split('T')[0];
+
+                    const statusInput = document.getElementById("status");
+                    statusInput.className = "w-full rounded p-2 font-semibold text-center";
+
+                    statusInput.value = "✅ Fee submit successfully";
+                    statusInput.classList.add('bg-green-100', 'text-green-600');
+
+                    successSound.play();
+
+                    // ✅ Success SweetAlert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Fee Submitted',
+                        text: 'Fee submitted successfully!',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    // Open print window
+                    window.open(res.print_url, '_blank', 'width=350,height=600');
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: res.message
+                    });
+                }
+            });
+        }
+
+    });
+
+}); --}}
