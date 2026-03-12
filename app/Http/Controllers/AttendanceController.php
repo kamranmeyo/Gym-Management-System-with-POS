@@ -24,12 +24,35 @@ public function scan(Request $request)
                     ->first();
 
     if (!$member) {
-        return response()->json(['status' => 'error', 'message' => 'Member not found.']);
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Member not found.'
+        ]);
     }
 
     $isExpired = now()->greaterThan($member->next_fee_due);
 
-    // ✅ (Optional) Record Attendance
+    // ✅ Check if attendance already exists today
+    $attendance = Attendance::where('member_id', $member->id)
+                    ->whereDate('date', now())
+                    ->first();
+
+    if ($attendance) {
+        return response()->json([
+            'status' => 'warning',
+            'message' => 'Attendance already marked for today.',
+            'data' => [
+                'name' => $member->name,
+                'plan' => $member->membership_type,
+                'start' => $member->join_date,
+                'end' => $member->next_fee_due,
+                'is_expired' => $isExpired,
+                'isAlreadyMarked' => true,
+            ]
+        ]);
+    }
+
+    // ✅ Insert attendance
     Attendance::create([
         'member_id' => $member->id,
         'date' => now(),
@@ -37,15 +60,18 @@ public function scan(Request $request)
 
     return response()->json([
         'status' => 'success',
+        'message' => 'Attendance marked successfully.',
         'data' => [
             'name' => $member->name,
             'plan' => $member->membership_type,
             'start' => $member->join_date,
             'end' => $member->next_fee_due,
             'is_expired' => $isExpired,
+            'isAlreadyMarked' => false,
         ]
     ]);
 }
+
 
 
 public function list(Request $request)

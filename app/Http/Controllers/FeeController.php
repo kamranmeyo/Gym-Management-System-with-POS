@@ -65,9 +65,9 @@ class FeeController extends Controller
     $member->FeeSubmitDate = now()->toDateString();
     $paidDate = Carbon::parse($request->fee_date);
 
-$member->last_fee_date = $paidDate;
-$member->FeeSubmitDate = now()->toDateString();
-$member->next_fee_due = $paidDate->copy()->addMonth();
+    $member->last_fee_date = $paidDate;
+    $member->FeeSubmitDate = now()->toDateString();
+    $member->next_fee_due = $paidDate->copy()->addMonth();
     $member->save();
 
     return response()->json([
